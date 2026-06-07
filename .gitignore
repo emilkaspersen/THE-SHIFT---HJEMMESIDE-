@@ -1,0 +1,11 @@
+# Claude / tooling
+.claude/
+
+# Design handoff bundle (reference only — not part of the site)
+design_extract/
+design_dump
+design_dump.html
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
