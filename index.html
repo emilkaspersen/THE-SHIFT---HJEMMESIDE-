@@ -2343,6 +2343,11 @@ image-slot.bleed::part(ring) { display: none; }
 
 /* Om os — text overlaid on the main photo */
 .omos-overlay p { color: var(--on-photo); }
+/* On phones the overlay reflows below the photo onto the light page —
+   switch from the on-photo cream to the dark body ink so it stays legible. */
+@media (max-width: 760px) {
+  .omos-overlay p { color: var(--bone); }
+}
 
 /* Kerneværdier — value words sit over the photo (lean on shadow for legibility) */
 .cv-word { color: var(--on-photo); text-shadow: 0 2px 10px rgba(0,0,0,0.55), 0 6px 40px rgba(0,0,0,0.5); }
