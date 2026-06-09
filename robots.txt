@@ -1,0 +1,7 @@
+# The Shift — robots.txt
+# Allow full indexing of the public site.
+User-agent: *
+Allow: /
+
+# XML sitemap (absolute URL, per spec)
+Sitemap: https://www.henrik-soerensen.dk/sitemap.xml

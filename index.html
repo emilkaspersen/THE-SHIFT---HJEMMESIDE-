@@ -6,14 +6,15 @@
 <title>The Shift — Et 3-dages broderskab for mænd</title>
 
 <!-- ============================================================
-     SEO / social. NOTE: replace the production domain below
-     (theshift.dk is a placeholder) once the real domain is live.
+     SEO / social. Production domain: https://www.henrik-soerensen.dk
+     Keep canonical, og:url and the JSON-LD @id/url values below in
+     sync with this domain (and with /sitemap.xml + /robots.txt).
      ============================================================ -->
 <meta name="description" content="The Shift er et intensivt 3-dages broderskab for mænd, der er klar til at tage ansvar for deres liv. Det, der tager år i terapi, kan ske på få dage — i de rette rammer, med de rette mennesker." />
 <meta name="author" content="The Shift" />
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#16110A" />
-<link rel="canonical" href="https://www.theshift.dk/" />
+<link rel="canonical" href="https://www.henrik-soerensen.dk/" />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
@@ -21,7 +22,7 @@
 <meta property="og:locale" content="da_DK" />
 <meta property="og:title" content="The Shift — Et 3-dages broderskab for mænd" />
 <meta property="og:description" content="Et rum for mænd, der er trætte af at leve styret af frygt og overtænkning. Det, der tager år i terapi, kan ske på få dage." />
-<meta property="og:url" content="https://www.theshift.dk/" />
+<meta property="og:url" content="https://www.henrik-soerensen.dk/" />
 <meta property="og:image" content="https://res.cloudinary.com/dssjlvoft/image/upload/c_fill,g_auto,w_1200,h_630,f_auto,q_auto/v1779463097/661176855_18575197846011770_4360949682931393459_n_kispdi.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -32,6 +33,7 @@
 <meta name="twitter:title" content="The Shift — Et 3-dages broderskab for mænd" />
 <meta name="twitter:description" content="Et rum for mænd, der er trætte af at leve styret af frygt og overtænkning. Det, der tager år i terapi, kan ske på få dage." />
 <meta name="twitter:image" content="https://res.cloudinary.com/dssjlvoft/image/upload/c_fill,g_auto,w_1200,h_630,f_auto,q_auto/v1779463097/661176855_18575197846011770_4360949682931393459_n_kispdi.jpg" />
+<meta name="twitter:image:alt" content="Mændene fra The Shift samlet udenfor" />
 
 <!-- Inline brand-mark favicon (no extra request, no 404) -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2316110A'/%3E%3Cline x1='50' y1='24' x2='50' y2='76' stroke='%239C5A33' stroke-width='1.6'/%3E%3Ctext x='50' y='58' font-family='Georgia, serif' font-size='30' letter-spacing='1' fill='%23F4EEE2' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E" />
@@ -43,25 +45,25 @@
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://www.theshift.dk/#org",
+      "@id": "https://www.henrik-soerensen.dk/#org",
       "name": "The Shift",
-      "url": "https://www.theshift.dk/",
+      "url": "https://www.henrik-soerensen.dk/",
       "description": "Et intensivt 3-dages broderskab for mænd, der er klar til at tage ansvar for deres liv.",
       "areaServed": "DK"
     },
     {
       "@type": "WebSite",
-      "@id": "https://www.theshift.dk/#website",
-      "url": "https://www.theshift.dk/",
+      "@id": "https://www.henrik-soerensen.dk/#website",
+      "url": "https://www.henrik-soerensen.dk/",
       "name": "The Shift",
       "inLanguage": "da-DK",
-      "publisher": { "@id": "https://www.theshift.dk/#org" }
+      "publisher": { "@id": "https://www.henrik-soerensen.dk/#org" }
     },
     {
       "@type": "FAQPage",
-      "@id": "https://www.theshift.dk/#faq",
+      "@id": "https://www.henrik-soerensen.dk/#faq",
       "inLanguage": "da-DK",
-      "isPartOf": { "@id": "https://www.theshift.dk/#website" },
+      "isPartOf": { "@id": "https://www.henrik-soerensen.dk/#website" },
       "mainEntity": [
         {
           "@type": "Question",
@@ -2970,46 +2972,121 @@ a, button, [role="button"], .btn, summary, input, label {
 </style>
 <script defer src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"></script>
 
-<!-- ============================================================
-     ANALYTICS MOUNT POINTS — intentionally empty.
-     Paste each provider's official snippet where indicated and
-     drop in the real ID. No tracking runs until you do.
-     ============================================================ -->
+<!-- ════════════════════════════════════════════════════════════════════
+     ANALYTICS, MARKETING & CONSENT
+     --------------------------------------------------------------------
+     Production-ready and consent-gated. Nothing tracks until you (a) paste
+     the real IDs in the ANALYTICS config below and (b) the visitor grants
+     consent. No fake IDs are present — empty values keep every tag dormant.
 
-<!-- Google Analytics 4 — replace G-XXXXXXXXXX
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+     STATIC-SITE NOTE: this project has no build step, so true Vercel
+     environment variables cannot be read in the browser. The single config
+     object below is the intended "one place to set IDs". If you later add a
+     build step, replace the three empty strings with an injected value such
+     as '%NEXT_PUBLIC_GA4_ID%' / process.env substitution at deploy time.
+     ════════════════════════════════════════════════════════════════════ -->
+
+<!-- 1 · CONFIG — paste your IDs here (leave '' to keep a provider disabled) -->
+<script>
+  window.ANALYTICS = {
+    ga4:       '',   // Google Analytics 4 Measurement ID, e.g. 'G-XXXXXXXXXX'
+    metaPixel: '',   // Meta (Facebook) Pixel ID,           e.g. '123456789012345'
+    clarity:   ''    // Microsoft Clarity Project ID,        e.g. 'abcdefghij'
+  };
+</script>
+
+<!-- 2 · GOOGLE CONSENT MODE v2 — MUST run before any Google tag.
+        Defaults every storage type to DENIED until the visitor consents. -->
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-</script>
--->
+  function gtag(){ dataLayer.push(arguments); }
 
-<!-- Meta (Facebook) Pixel — replace YOUR_PIXEL_ID
+  // Re-apply a previously stored choice (set by your cookie banner) so we
+  // don't ask returning visitors again. Defaults to DENIED for new visitors.
+  var __consentChoice = 'denied';
+  try { if (localStorage.getItem('cookie_consent') === 'granted') __consentChoice = 'granted'; } catch (e) {}
+
+  gtag('consent', 'default', {
+    ad_storage:         __consentChoice,
+    ad_user_data:       __consentChoice,
+    ad_personalization: __consentChoice,
+    analytics_storage:  __consentChoice,
+    functionality_storage: 'granted',   // strictly-necessary
+    security_storage:      'granted',    // strictly-necessary
+    wait_for_update: 500                 // hold tags briefly for a consent signal
+  });
+
+  /* ── COOKIE-BANNER HOOKS ─────────────────────────────────────────────
+     Do NOT hardcode a banner vendor here. Wire your banner's buttons to:
+        ACCEPT   → window.consent.grant()
+        DECLINE  → window.consent.deny()
+     These update Google Consent Mode v2 live AND gate the marketing tags
+     (Meta Pixel) + Microsoft Clarity, which don't use Google Consent Mode. */
+  window.consent = {
+    grant: function () {
+      gtag('consent', 'update', {
+        ad_storage: 'granted', ad_user_data: 'granted',
+        ad_personalization: 'granted', analytics_storage: 'granted'
+      });
+      try { localStorage.setItem('cookie_consent', 'granted'); } catch (e) {}
+      if (window.__loadMarketingTags) window.__loadMarketingTags();   // Meta Pixel
+      if (window.clarity) window.clarity('consent');                  // Clarity opt-in
+    },
+    deny: function () {
+      gtag('consent', 'update', {
+        ad_storage: 'denied', ad_user_data: 'denied',
+        ad_personalization: 'denied', analytics_storage: 'denied'
+      });
+      try { localStorage.setItem('cookie_consent', 'denied'); } catch (e) {}
+    }
+  };
+</script>
+
+<!-- 3 · GOOGLE ANALYTICS 4 — loads only when ANALYTICS.ga4 is set.
+        Storage stays cookieless until consent is granted (Consent Mode). -->
 <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window,document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', 'YOUR_PIXEL_ID');
-  fbq('track', 'PageView');
+  (function () {
+    var id = window.ANALYTICS && window.ANALYTICS.ga4;
+    if (!id) return;                                   // no ID → GA4 stays off
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', id, { anonymize_ip: true });
+  })();
 </script>
--->
 
-<!-- Microsoft Clarity — replace YOUR_CLARITY_ID
-<script type="text/javascript">
-  (function(c,l,a,r,i,t,y){
-    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-  })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
+<!-- 4 · META (FACEBOOK) PIXEL — loads once, only after marketing consent.
+        Single PageView (no duplicate). Trigger via window.consent.grant(). -->
+<script>
+  window.__loadMarketingTags = function () {
+    var id = window.ANALYTICS && window.ANALYTICS.metaPixel;
+    if (!id || window.__metaPixelLoaded) return;       // no ID / already loaded → skip
+    window.__metaPixelLoaded = true;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', id);
+    fbq('track', 'PageView');                          // exactly one PageView
+  };
+  // Returning visitor who already accepted → load immediately.
+  try { if (localStorage.getItem('cookie_consent') === 'granted') window.__loadMarketingTags(); } catch (e) {}
 </script>
--->
+
+<!-- 5 · MICROSOFT CLARITY — loads only when ANALYTICS.clarity is set.
+        Call window.clarity('consent') on accept (handled in the hook above). -->
+<script>
+  (function (c, l, a, r, i, t, y) {
+    i = window.ANALYTICS && window.ANALYTICS.clarity;
+    if (!i) return;                                    // no ID → Clarity stays off
+    c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+    t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+    y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+  })(window, document, "clarity", "script");
+</script>
 </head>
 <body>
 <div class="grain" aria-hidden="true"></div>

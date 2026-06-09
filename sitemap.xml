@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- The Shift is a single-page site; in-page anchors (#kernevaerdier, #faq …)
+       are not separate indexable URLs, so the homepage is the only entry. -->
+  <url>
+    <loc>https://www.henrik-soerensen.dk/</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
