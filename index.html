@@ -520,10 +520,39 @@ image-slot.bleed::part(ring) { display: none; }
   margin: 0;
 }
 @media (max-width: 760px) {
-  .omos-grid { grid-template-columns: 1fr; gap: 16px; }
-  .omos-overlay { position: static; width: 100%; padding: 18px 0 0; }
-  .omos-scrim { display: none; }
-  .omos-main image-slot, .omos-side image-slot { aspect-ratio: 4 / 3; }
+  /* Mobile: one unified content block — the supporting description sits in the
+     top-left of the main image over a subtle dark overlay, and the workshop
+     facts sit in a compact 2-col grid immediately below. The secondary
+     "Sted · Danmark" image is hidden on phones for a single, cohesive block. */
+  .omos-head { margin-bottom: clamp(20px, 5vw, 28px); }
+  .omos-grid { display: flex; flex-direction: column; align-items: stretch; gap: clamp(14px, 4vw, 20px); }
+  .omos-main { order: 1; }
+  .omos-main > image-slot { aspect-ratio: 4 / 5; }
+  /* subtle dark overlay, heaviest top-left behind the text, fading to clear */
+  .omos-scrim {
+    display: block;
+    background: linear-gradient(152deg,
+      rgba(10, 9, 7, 0.82) 0%,
+      rgba(10, 9, 7, 0.48) 30%,
+      rgba(10, 9, 7, 0.08) 58%,
+      transparent 76%);
+  }
+  /* description overlaid in the top-left corner of the image */
+  .omos-overlay {
+    position: absolute;
+    top: 0; left: 0; right: auto;
+    width: min(88%, 330px);
+    padding: clamp(18px, 5vw, 26px);
+  }
+  /* hide the secondary image; facts sit directly under the main image */
+  .omos-side { order: 2; }
+  .omos-side > image-slot { display: none; }
+  .omos-facts {
+    margin-top: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(16px, 4.5vw, 22px) clamp(16px, 4vw, 24px);
+  }
 }
 
 /* ---------- Kerneværdier (sticky light header + pinned image, values cycle) ---------- */
@@ -1198,6 +1227,32 @@ image-slot.bleed::part(ring) { display: none; }
   .henrik-copy p { max-width: none; }
 }
 
+/* Hvem er Henrik carousel — phones (<=760px): drive the continuous right→left
+   motion with a GPU transform marquee instead of the JS scrollLeft loop.
+   iOS Safari ignores programmatic scrollLeft repaints on
+   -webkit-overflow-scrolling containers, which froze the carousel on phones.
+   A transform animation is smooth, performant and never traps page scroll.
+   Gated by no-preference so reduced-motion users keep the manual-scroll strip;
+   desktop (>760) and tablets keep the JS drag/auto-scroll untouched. */
+@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+  .henrik-carousel { overflow: hidden; }
+  .henrik-track {
+    width: max-content;
+    gap: 0;                       /* spacing moves to per-slide margin so the
+                                     doubled set tiles exactly at -50% */
+    overflow: visible;
+    cursor: default;
+    touch-action: pan-y pinch-zoom;
+    animation: henrik-marquee 40s linear infinite;
+    will-change: transform;
+  }
+  .henrik-slide { margin-right: clamp(10px, 1vw, 16px); }
+}
+@keyframes henrik-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
 /* ---------- Holdet (team) ---------- */
 .team { background: var(--ink); }
 .team-grid {
@@ -1423,7 +1478,16 @@ image-slot.bleed::part(ring) { display: none; }
   .team-intro { max-width: 52ch; }
 }
 @media (max-width: 560px) {
-  .team-cards { grid-template-columns: 1fr; gap: clamp(30px, 8vw, 42px); }
+  /* Keep both coaches on one row so the "facilitating together" feeling holds
+     and scrolling stays short. Cards narrow but remain readable & balanced. */
+  .team-cards { grid-template-columns: repeat(2, 1fr); gap: clamp(12px, 3.5vw, 20px); }
+  /* No hover on touch — surface "Læs mere" so both bios stay reachable
+     (Philip's image-slot card has no photo-tap fallback). */
+  .team-more { opacity: 1; transform: none; padding: 7px 12px; font-size: 10px; letter-spacing: 0.12em; gap: 6px; }
+  .team-more::after { font-size: 12px; }
+  /* On narrow side-by-side cards the always-visible button would overlap the
+     role label at bottom — move the label to the top so nothing is hidden. */
+  .team-role { top: clamp(12px, 3.5vw, 16px); bottom: auto; }
 }
 
 /* ---------- Deltagernes ord (testimonials · auto-marquee) ---------- */
@@ -1702,9 +1766,25 @@ image-slot.bleed::part(ring) { display: none; }
   .invite .btn { animation: none; }
 }
 @media (max-width: 620px) {
-  .invite-facts { flex-direction: column; max-width: 360px; }
-  .invite-fact { border-left: 0; border-top: 1px solid rgba(244, 238, 226, 0.13); }
-  .invite-fact:first-child { border-top: 0; }
+  /* Compact 2-col info grid — Dato | Sted on row 1, Hold full-width on row 2.
+     Tighter margins/padding reduce height and lift the CTA button, without
+     touching type, colour, the framed dividers or the centred cinematic feel. */
+  .invite-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 380px;
+    margin: clamp(28px, 7vw, 40px) auto clamp(30px, 7vw, 42px);
+  }
+  .invite-fact {
+    border-left: 0;
+    padding: clamp(16px, 4.5vw, 22px) clamp(14px, 4vw, 20px);
+  }
+  .invite-fact:nth-child(2) { border-left: 1px solid rgba(244, 238, 226, 0.13); }
+  .invite-fact:nth-child(3) {
+    grid-column: 1 / -1;
+    border-top: 1px solid rgba(244, 238, 226, 0.13);
+  }
+  .invite-fact .k { margin-bottom: 8px; }
 }
 
 /* ---------- FAQ (intro column + accordion) ---------- */
@@ -2153,11 +2233,15 @@ image-slot.bleed::part(ring) { display: none; }
 @media (max-width: 700px) {
   .incl-head { padding-top: clamp(72px, 14vw, 104px); }
   .incl-row {
-    position: static;
+    /* Mobile keeps the desktop "deck" feeling: each card sticks just below
+       the pinned heading and the next slides up to rest a touch lower,
+       overlapping the previous one. Pure sticky — no JS, no scroll trap. */
+    position: sticky;
+    top: calc(var(--incl-stack-top, 96px) + var(--i, 0) * 10px);
     grid-template-columns: 1fr;
     gap: clamp(18px, 4vw, 26px);
     padding: clamp(28px, 6vw, 40px) clamp(22px, 5vw, 30px);
-    margin-bottom: clamp(18px, 4vw, 26px);
+    margin-bottom: clamp(22px, 5vw, 34px);
     border-radius: 18px;
   }
   .incl-cat { order: 1; }
@@ -2341,13 +2425,9 @@ image-slot.bleed::part(ring) { display: none; }
 .scroll-cue span { color: rgba(244, 238, 226, 0.62); }
 .scroll-cue .line { background: linear-gradient(180deg, rgba(244, 238, 226, 0.6), transparent); }
 
-/* Om os — text overlaid on the main photo */
+/* Om os — text overlaid on the main photo (cream over the photo on every
+   breakpoint; on phones it sits top-left over the dark scrim overlay). */
 .omos-overlay p { color: var(--on-photo); }
-/* On phones the overlay reflows below the photo onto the light page —
-   switch from the on-photo cream to the dark body ink so it stays legible. */
-@media (max-width: 760px) {
-  .omos-overlay p { color: var(--bone); }
-}
 
 /* Kerneværdier — value words sit over the photo (lean on shadow for legibility) */
 .cv-word { color: var(--on-photo); text-shadow: 0 2px 10px rgba(0,0,0,0.55), 0 6px 40px rgba(0,0,0,0.5); }
@@ -2613,6 +2693,48 @@ image-slot.bleed::part(ring) { display: none; }
   }
 }
 
+/* Oplev rejsen — mobile-only cinematic scenes.
+   Phones (<=900px) only — desktop reduced-motion users keep the embedded
+   layout above. Each chapter becomes its own full-bleed scene: its existing
+   image/video becomes the section background, text sits over a dark gradient
+   for readability. No parallax, no fixed backgrounds, no JS, no scroll traps —
+   backgrounds simply scroll with the page (iOS-safe). */
+@media (max-width: 900px) {
+  .jrny-m-ch {
+    position: relative;
+    min-height: 100svh;
+    padding: clamp(96px, 22vw, 160px) 24px clamp(40px, 11vw, 64px);
+    margin-bottom: 0;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+  /* Existing media element → full-bleed scene background */
+  .jrny-m-media {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    aspect-ratio: auto;
+    box-shadow: none;
+    z-index: 0;
+  }
+  /* Dark gradient overlay: darker top & bottom blends scene-to-scene and
+     keeps the bottom-anchored text legible over any image */
+  .jrny-m-media::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 9, 7, 0.62) 0%,
+      rgba(10, 9, 7, 0.18) 30%,
+      rgba(10, 9, 7, 0.42) 62%,
+      rgba(10, 9, 7, 0.92) 100%
+    );
+    pointer-events: none;
+  }
+  /* Lift the chapter text above the background image */
+  .jrny-m-ch > :not(.jrny-m-media) { position: relative; z-index: 1; }
+  .jrny-m-body { color: rgba(244, 238, 226, 0.92); max-width: 40ch; }
+}
+
 /* ---------- Henriks ord (Eagle's Nest-style: full-bleed photo scrolls past a
    sticky quote whose words sharpen in, one by one, on scroll) ---------- */
 .refl {
@@ -2753,6 +2875,35 @@ image-slot.bleed::part(ring) { display: none; }
   .refl-para { color: var(--bone); }
   .refl-word { text-shadow: none; }
   .refl-attr { color: var(--stone); text-shadow: none; }
+}
+
+/* Phones only (<=760px): the provided composite image (portrait + baked-in
+   quote + attribution) IS the whole section. Show it uncropped at its natural
+   ratio and hide the live quote block + scrim. The quote stays in the DOM but
+   visually hidden so screen readers still get the words (baked image text is
+   not machine-readable). Scoped to <=760 so the 761-880 tablet layout and the
+   desktop layout (original image + live animated quote) are unchanged. */
+@media (max-width: 760px) {
+  .refl-media { position: relative; height: auto; }
+  .refl-img {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    object-fit: fill;          /* moot at natural ratio — image shown in full */
+    object-position: 50% 50%;
+  }
+  .refl-scrim { display: none; }
+  /* visually hide the live quote (keep it for assistive tech) */
+  .refl-quote {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0; border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .refl-word, .refl-attr {
@@ -3242,7 +3393,14 @@ a, button, [role="button"], .btn, summary, input, label {
   <!-- 8.6 · HENRIKS ORD (image-led founder reflection — scroll through the photograph) -->
   <section class="refl" id="henriks-ord" data-screen-label="Henriks ord">
     <div class="refl-media">
-      <img class="refl-img" id="reflImg" src="uploads/henrik-portraet.png" alt="Henrik Sørensen ved vandet i stille eftertanke" loading="lazy" decoding="async" />
+      <!-- Mobile-only (<=760px): the full provided composite (portrait + baked-in
+           quote + attribution) becomes the entire section; the live quote block
+           below is visually hidden on phones (kept in the DOM, screen-reader
+           accessible). Desktop & tablet keep the original <img> + live quote. -->
+      <picture>
+        <source media="(max-width: 760px)" srcset="https://res.cloudinary.com/dssjlvoft/image/upload/f_auto,q_auto/v1780997984/ChatGPT_Image_9._jun._2026_11.39.35_sxoqhs.png" />
+        <img class="refl-img" id="reflImg" src="uploads/henrik-portraet.png" alt="Henrik Sørensen ved vandet i stille eftertanke" loading="lazy" decoding="async" />
+      </picture>
     </div>
     <div class="refl-scrim"></div>
     <div class="refl-quote" id="reflQuote">
