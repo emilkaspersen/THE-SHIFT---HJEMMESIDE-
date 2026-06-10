@@ -2989,7 +2989,7 @@ a, button, [role="button"], .btn, summary, input, label {
 <!-- 1 · CONFIG — paste your IDs here (leave '' to keep a provider disabled) -->
 <script>
   window.ANALYTICS = {
-    ga4:       '',   // Google Analytics 4 Measurement ID, e.g. 'G-XXXXXXXXXX'
+    ga4:       'G-FZ73KN48RR',   // Google Analytics 4 Measurement ID
     metaPixel: '',   // Meta (Facebook) Pixel ID,           e.g. '123456789012345'
     clarity:   ''    // Microsoft Clarity Project ID,        e.g. 'abcdefghij'
   };
@@ -3086,6 +3086,51 @@ a, button, [role="button"], .btn, summary, input, label {
     t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
     y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
   })(window, document, "clarity", "script");
+</script>
+
+<!-- 6 · OSANO COOKIE CONSENT (CMP) — the live consent banner that drives the
+        Google Consent Mode v2 setup above. Osano stores the visitor's choice
+        and re-applies it on every load, so consent persists across reloads.
+        Bridge mapping:
+          Osano ANALYTICS = ACCEPT → analytics_storage granted (GA4 + Clarity)
+          Osano MARKETING = ACCEPT → ad_storage/ad_user_data/ad_personalization
+                                      granted + Meta Pixel loaded
+        Accept grants, Reject denies; GA4 stays cookieless until granted. -->
+<script src="https://cmp.osano.com/Ldt0fZa30q/c01cd7e1-b82a-4076-82e4-af5590cc56cf/osano.js"></script>
+<script>
+  (function () {
+    // Translate Osano's per-category decision into Consent Mode v2 + tag gating.
+    function applyOsanoConsent(consent) {
+      if (!consent) return;
+      var analytics = consent.ANALYTICS === 'ACCEPT';
+      var marketing = consent.MARKETING === 'ACCEPT';
+      gtag('consent', 'update', {
+        analytics_storage:  analytics ? 'granted' : 'denied',
+        ad_storage:         marketing ? 'granted' : 'denied',
+        ad_user_data:       marketing ? 'granted' : 'denied',
+        ad_personalization: marketing ? 'granted' : 'denied'
+      });
+      // Future Meta Pixel loads only on marketing consent (single PageView).
+      if (marketing && window.__loadMarketingTags) window.__loadMarketingTags();
+      // Future Microsoft Clarity opt-in on analytics consent.
+      if (analytics && window.clarity) window.clarity('consent');
+      // Mirror into our fast-path flag so the Consent Mode default (section 2)
+      // restores the choice instantly on the next load, before Osano re-inits.
+      try { localStorage.setItem('cookie_consent', (analytics || marketing) ? 'granted' : 'denied'); } catch (e) {}
+    }
+
+    // Attach once osano.js has registered its consent manager.
+    function bind() {
+      if (!(window.Osano && Osano.cm && Osano.cm.addEventListener)) return false;
+      Osano.cm.addEventListener('osano-cm-initialized', applyOsanoConsent);   // re-apply stored choice on load
+      Osano.cm.addEventListener('osano-cm-consent-saved', applyOsanoConsent); // Accept / Reject / Save
+      return true;
+    }
+    if (!bind()) {
+      var tries = 0;
+      var iv = setInterval(function () { if (bind() || ++tries > 50) clearInterval(iv); }, 100);
+    }
+  })();
 </script>
 </head>
 <body>
