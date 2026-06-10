@@ -2991,7 +2991,7 @@ a, button, [role="button"], .btn, summary, input, label {
   window.ANALYTICS = {
     ga4:       'G-FZ73KN48RR',   // Google Analytics 4 Measurement ID
     metaPixel: '',   // Meta (Facebook) Pixel ID,           e.g. '123456789012345'
-    clarity:   ''    // Microsoft Clarity Project ID,        e.g. 'abcdefghij'
+    clarity:   'x4r22kxg9h'    // Microsoft Clarity Project ID
   };
 </script>
 
@@ -3076,15 +3076,28 @@ a, button, [role="button"], .btn, summary, input, label {
   try { if (localStorage.getItem('cookie_consent') === 'granted') window.__loadMarketingTags(); } catch (e) {}
 </script>
 
-<!-- 5 · MICROSOFT CLARITY — loads only when ANALYTICS.clarity is set.
-        Call window.clarity('consent') on accept (handled in the hook above). -->
+<!-- 5 · MICROSOFT CLARITY — gated behind ANALYTICS consent.
+        The clarity() queue stub is defined up-front so calls are captured, but
+        the tag itself is injected ONLY when clarity('consent') fires — which
+        happens on analytics consent via window.consent.grant() (section 2) and
+        the Osano bridge (section 6). So Clarity never loads before analytics
+        consent, loads right after, and is injected once (no duplicates). -->
 <script>
-  (function (c, l, a, r, i, t, y) {
-    i = window.ANALYTICS && window.ANALYTICS.clarity;
-    if (!i) return;                                    // no ID → Clarity stays off
-    c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
-    t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
-    y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+  (function (c, l, a, r) {
+    var id = window.ANALYTICS && window.ANALYTICS.clarity;
+    if (!id) return;                                   // no ID → Clarity stays off
+    c[a] = c[a] || function () {
+      (c[a].q = c[a].q || []).push(arguments);
+      // First analytics-consent signal → inject the Clarity tag (once).
+      if (arguments[0] === 'consent' && !c.__clarityLoaded) {
+        c.__clarityLoaded = true;
+        var t = l.createElement(r); t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + id;
+        var y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+      }
+    };
+    // Returning visitor who already accepted analytics → load now (mirrors Meta).
+    try { if (localStorage.getItem('cookie_consent') === 'granted') c[a]('consent'); } catch (e) {}
   })(window, document, "clarity", "script");
 </script>
 
